@@ -1,0 +1,16 @@
+/**
+ * @brief file containing the configurations constant for the API
+ * this file is an example to show how to do it, please copy this file and rename it to config.js then fill the values
+ * @author Sorann
+ * @date 2024
+ */
+
+"use strict";
+
+// export the whole config
+module.exports = Object.freeze({
+
+    PORT: process.env.PORT || 3001,
+    HOMEPAGE: "/your_app", // http://localhost:3001/your_app/ 
+    
+});
