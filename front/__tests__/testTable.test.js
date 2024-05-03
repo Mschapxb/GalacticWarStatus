@@ -57,17 +57,17 @@ test('La fonction toggleFavorite ajoute et supprime correctement les planètes d
     // Appeler la fonction generateTable avec les données de test
     generateTable(data);
 
-    // Planète à tester
-    const planetName = "Cyberstan";
+    // Parcourir toutes les données de test et tester la fonction toggleFavorite pour chaque planète
+    data.forEach(item => {
+        // Sélectionner l'icône d'étoile de la planète
+        const favoriteIcon = document.querySelector(`i[data-planet="${item.planet}"]`);
 
-    // Créer une icône d'étoile pour la planète
-    const favoriteIcon = document.querySelector(`i[data-planet="${planetName}"]`);
+        // Simuler le clic pour ajouter la planète aux favoris
+        toggleFavorite({ target: favoriteIcon });
+        expect(localStorage.getItem(item.planet)).toBeTruthy(); // Vérifier si la planète a été ajoutée aux favoris
 
-    // Simuler le clic pour ajouter la planète aux favoris
-    toggleFavorite({ target: favoriteIcon });
-    expect(localStorage.getItem(planetName)).toBeTruthy(); // Vérifier si la planète a été ajoutée aux favoris
-
-    // Simuler le clic pour supprimer la planète des favoris
-    toggleFavorite({ target: favoriteIcon });
-    expect(localStorage.getItem(planetName)).toBeFalsy(); // Vérifier si la planète a été supprimée des favoris
+        // Simuler le clic pour supprimer la planète des favoris
+        toggleFavorite({ target: favoriteIcon });
+        expect(localStorage.getItem(item.planet)).toBeFalsy(); // Vérifier si la planète a été supprimée des favoris
+    });
 });
