@@ -18,6 +18,13 @@ Jsdom est une bibliothèque de test JavaScript. Pour l'installer localement dans
 
 npm install --save-dev jsdom
 
+## Installation de jest-localstorage-mock
+
+jest-localstorage-mock est une bibliothèque de test JavaScript. Pour l'installer localement dans votre projet, exécutez la commande suivante dans votre terminal :
+
+npm install --save-dev jest-localstorage-mock
+
+
 ## Effectuer le test unitaire de génération du tableau
 
 Pour lancer le test, exécutez la commande suivante dans votre terminal :

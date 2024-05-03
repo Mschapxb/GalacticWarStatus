@@ -1,5 +1,3 @@
-
-
 function generateTable(data, showFavoritesOnly = false) {
     const tbody = document.querySelector("table tbody");
 
@@ -84,3 +82,8 @@ function toggleFavorite(event) {
         favoriteIcon.classList.add("text-warning");
     }
 }
+
+module.exports = {
+    generateTable,
+    toggleFavorite
+};
