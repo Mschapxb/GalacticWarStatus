@@ -177,71 +177,95 @@
   </main>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var token = localStorage.getItem('accessToken');
-        if (!token) {
-            // Si aucun token n'est trouvé, redirige l'utilisateur vers la page 'index.html'
-            window.location.href = 'index.html';
-            return; // Arrête l'exécution du script restant pour éviter les erreurs
-        }
-    
-        const apiUrl = 'http://localhost:3000/api/helldivers/info';  // Assurez-vous que l'URL est correcte
-    
-        function fetchPlanetData() {
-            fetch(apiUrl, {
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                generateTable(data);
-            })
-            .catch(error => {
-                console.error('Error fetching data: ', error);
-                alert('Failed to load planet data');
-            });
-        }
-    
-        function generateTable(data, onlyFavorites = false) {
-            const tableBody = document.querySelector('.table tbody');
-            tableBody.innerHTML = ''; // Effacer les données existantes
-    
-            data.forEach((item) => {
-                if (onlyFavorites && !item.isFavorite) {
-                    return;
-                }
-    
-                const row = `
-                    <tr>
-                        <td class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.planetName}</td>
-                        <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.sector}</td>
-                        <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.liberationPercentage.toFixed(2)}%</td>
-                        <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.playerCount}</td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
-            });
-        }
-    
-        fetchPlanetData();
-    
-        // Ajout d'un écouteur d'événements pour la case à cocher
-        const favoriteCheckbox = document.getElementById("favoriteCheckbox");
-        favoriteCheckbox.addEventListener("change", function() {
-            fetchPlanetData().then(data => {
-                generateTable(data, this.checked);
-            });
-        });
-    });
-    </script>
-    
+      // Données fictives pour l'exemple
+      const data = [
+          { planet: "Cyberstan", system: "Système machin", status: "Libéré", liberation: "100%", players: 553535 },
+          { planet: "Planet 2", system: "Système truc", status: "Enemies", liberation: "0%", players: 3000 },
+          { planet: "Malevelon Creek", system: "Système machin", status: "Libéré", liberation: "100%", players: 0 },
+          { planet: "Malevelon Beach", system: "Système machin", status: "Libéré", liberation: "100%", players: 0 },
+          { planet: "FenrirII", system: "Système machin", status: "Enemies", liberation: "30%", players: 125541 },
+      ];
   
+      // Appel de la fonction pour générer le tableau avec les données
+      generateTable(data);
   
+      // Ajout d'un écouteur d'événements pour la case à cocher
+      const favoriteCheckbox = document.getElementById("favoriteCheckbox");
+      favoriteCheckbox.addEventListener("change", function() {
+          if (this.checked) {
+              // Si la case est cochée, afficher uniquement les favoris
+              generateTable(data, true);
+          } else {
+              // Sinon, afficher toutes les planètes
+              generateTable(data, false);
+          }
+      });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      var token = localStorage.getItem('accessToken');
+      if (!token) {
+          // Si aucun token n'est trouvé, redirige l'utilisateur vers la page 'index.html'
+          window.location.href = 'index.html';
+          return; // Arrête l'exécution du script restant pour éviter les erreurs
+      }
+  
+      const apiUrl = 'http://localhost:3000/api/helldivers/info';  // Assurez-vous que l'URL est correcte
+  
+      function fetchPlanetData() {
+          fetch(apiUrl, {
+              headers: {
+                  'Authorization': 'Bearer ' + token
+              }
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              generateTable(data);
+          })
+          .catch(error => {
+              console.error('Error fetching data: ', error);
+              alert('Failed to load planet data');
+          });
+      }
+  
+      function generateTable(data, onlyFavorites = false) {
+          const tableBody = document.querySelector('.table tbody');
+          tableBody.innerHTML = ''; // Effacer les données existantes
+  
+          data.forEach((item) => {
+              if (onlyFavorites && !item.isFavorite) {
+                  return;
+              }
+  
+              const row = `
+                  <tr>
+                      <td class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.planetName}</td>
+                      <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.sector}</td>
+                      <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.liberationPercentage.toFixed(2)}%</td>
+                      <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.playerCount}</td>
+                  </tr>
+              `;
+              tableBody.innerHTML += row;
+          });
+      }
+  
+      fetchPlanetData();
+  
+      // Ajout d'un écouteur d'événements pour la case à cocher
+      const favoriteCheckbox = document.getElementById("favoriteCheckbox");
+      favoriteCheckbox.addEventListener("change", function() {
+          fetchPlanetData().then(data => {
+              generateTable(data, this.checked);
+          });
+      });
+  });
+  </script>
 </body>
 
 </html>
