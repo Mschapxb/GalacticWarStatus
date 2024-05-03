@@ -132,6 +132,7 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Planète</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">% de libérations</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nombre de joueurs</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -159,16 +160,14 @@
       </footer>
     </div>
   </main>
-
   <!-- Script for Dynamic Table Data -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       // Données fictives pour l'exemple
       const data = [
-        { planet: "Cyberstan", system: "Système machin", status: "Libérée", liberation: "100%" },
-        { planet: "Planet 2", system: "Système truc", status: "Enemie", liberation: "0%" },
-        { planet: "Planet 2", system: "Système truc", status: "Enemie", liberation: "50%" },
-        { planet: "Planet 3", system: "Système truc", status: "Libérée", liberation: "100%" }
+        { planet: "Cyberstan", system: "Système machin", status: "Libéré", liberation: "100%", players: 50655 },
+        { planet: "Planet 2", system: "Système truc", status: "Enemies", liberation: "0%", players: 3258 },
+        { planet: "Malevelon Creek", system: "Système machin", status: "Libéré", liberation: "100%", players: 0 }
       ];
 
       // Sélectionne l'élément tbody du tableau
@@ -195,13 +194,18 @@
 
         const statusCell = document.createElement("td");
         statusCell.classList.add("align-middle", "text-center", "text-sm");
-        statusCell.innerHTML = `<span class="badge badge-sm bg-gradient-${item.status === "Libérée" ? "success" : "secondary"}">${item.status}</span>`;
+        statusCell.innerHTML = `<span class="badge badge-sm bg-gradient-${item.status === "Libéré" ? "success" : "secondary"}">${item.status}</span>`;
         row.appendChild(statusCell);
 
         const liberationCell = document.createElement("td");
         liberationCell.classList.add("align-middle", "text-center");
         liberationCell.innerHTML = `<span class="text-secondary text-xs font-weight-bold">${item.liberation}</span>`;
         row.appendChild(liberationCell);
+
+        const playersCell = document.createElement("td");
+        playersCell.classList.add("align-middle", "text-center");
+        playersCell.innerHTML = `<span class="text-secondary text-xs font-weight-bold">${item.players}</span>`;
+        row.appendChild(playersCell);
 
         // Ajoute la ligne au tableau
         tbody.appendChild(row);
