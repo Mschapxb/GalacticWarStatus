@@ -1,86 +1,73 @@
+// table.js
 
+document.addEventListener("DOMContentLoaded", function() {
+    fetchPlanetData();
+});
 
-function generateTable(data, showFavoritesOnly = false) {
-    const tbody = document.querySelector("table tbody");
+async function fetchPlanetData() {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        window.location.href = 'index.html';
+        return;
+    }
 
-    // Supprimer le contenu existant du tbody
-    tbody.innerHTML = '';
+    const apiUrl = 'http://localhost:3000/api/helldivers/info';
 
-    // Récupérer les données des planètes en favori
-    const favoritePlanets = Object.keys(localStorage);
-
-    // Parcours les données et crée les lignes du tableau
-    data.forEach(item => {
-        // Vérifie si l'utilisateur souhaite afficher uniquement les favoris et si la planète est en favori
-        if (!showFavoritesOnly || (showFavoritesOnly && favoritePlanets.includes(item.planet))) {
-            const row = document.createElement("tr");
-
-            // Crée les cellules pour chaque propriété
-            const planetCell = document.createElement("td");
-            planetCell.innerHTML = `
-                <div class="d-flex px-2 py-1">
-                    <div>
-                        <img src="assets/img/planet.png" class="avatar avatar-sm me-3" alt="${item.planet}">
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">${item.planet}</h6>
-                        <p class="text-xs text-secondary mb-0">${item.system}</p>
-                    </div>
-                </div>
-            `;
-            row.appendChild(planetCell);
-
-            const statusCell = document.createElement("td");
-            statusCell.classList.add("align-middle", "text-center", "text-sm");
-            statusCell.innerHTML = `<span class="badge badge-sm bg-gradient-${item.status === "Libéré" ? "success" : "secondary"}">${item.status}</span>`;
-            row.appendChild(statusCell);
-
-            const liberationCell = document.createElement("td");
-            liberationCell.classList.add("align-middle", "text-center");
-            liberationCell.innerHTML = `<span class="text-secondary text-xs font-weight-bold">${item.liberation}</span>`;
-            row.appendChild(liberationCell);
-
-            const playersCell = document.createElement("td");
-            playersCell.classList.add("align-middle", "text-center");
-            playersCell.innerHTML = `<span class="text-secondary text-xs font-weight-bold">${item.players}</span>`;
-            row.appendChild(playersCell);
-
-            const favoriteCell = document.createElement("td");
-            favoriteCell.classList.add("align-middle", "text-center");
-            const favoriteIcon = document.createElement("i");
-            favoriteIcon.classList.add("fas", "fa-star");
-            favoriteIcon.dataset.planet = item.planet;
-            favoriteIcon.style.cursor = "pointer";
-            // Vérifie si la planète est dans les favoris et met en évidence l'icône en conséquence
-            if (localStorage.getItem(item.planet)) {
-                favoriteIcon.classList.add("text-warning");
-            } else {
-                favoriteIcon.classList.add("text-secondary");
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                'Authorization': 'Bearer ' + token
             }
-            // Ajoute un écouteur d'événements pour basculer l'état favori
-            favoriteIcon.addEventListener("click", toggleFavorite);
-            favoriteCell.appendChild(favoriteIcon);
-            row.appendChild(favoriteCell);
-
-            // Ajoute la ligne au tableau
-            tbody.appendChild(row);
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        const data = await response.json();
+        generateTable(data); // initial table generation
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+        alert('Failed to load planet data');
+    }
+}
+
+function generateTable(data, onlyFavorites = false) {
+    const tableBody = document.querySelector('.table tbody');
+    tableBody.innerHTML = '';
+
+    data.forEach((item) => {
+        if (onlyFavorites && !item.isFavorite) {
+            return;
+        }
+
+        const row = `
+            <tr>
+                <td class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    <img src="${item.planetImageUrl || 'assets/img/planet.png'}" alt="Image de ${item.planetName}" style="width: 50px; height: 50px; vertical-align: middle; margin-right: 10px;">
+                    ${item.planetName}
+                </td>
+                <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.sector}</td>
+                <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.liberationPercentage.toFixed(2)}%</td>
+                <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.playerCount}</td>
+                <td class="text-center">
+                    <span class="favorite-star ${item.isFavorite ? 'text-warning' : 'text-secondary'}" data-planet-id="${item.planetId}" style="cursor: pointer;">
+                        <i class="fas fa-star"></i>
+                    </span>
+                </td>
+            </tr>
+        `;
+        tableBody.innerHTML += row;
+    });
+
+    // Ajoutez un gestionnaire d'événements pour cliquer sur une étoile pour ajouter/supprimer une planète des favoris
+    document.querySelectorAll('.favorite-star').forEach((star) => {
+        star.addEventListener('click', function() {
+            const planetId = this.dataset.planetId;
+            toggleFavorite(planetId);
+        });
     });
 }
 
-// Fonction pour basculer l'état de la planète favorite
-function toggleFavorite(event) {
-    const planetName = event.target.dataset.planet;
-    const favoriteIcon = event.target;
-    if (localStorage.getItem(planetName)) {
-        // Si la planète est déjà en favori, la retirer
-        localStorage.removeItem(planetName);
-        favoriteIcon.classList.remove("text-warning");
-        favoriteIcon.classList.add("text-secondary");
-    } else {
-        // Sinon, ajoutez la planète aux favoris
-        localStorage.setItem(planetName, "true");
-        favoriteIcon.classList.remove("text-secondary");
-        favoriteIcon.classList.add("text-warning");
-    }
+async function toggleFavorite(planetId) {
+
 }
+
