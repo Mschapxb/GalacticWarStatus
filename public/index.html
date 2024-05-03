@@ -45,7 +45,7 @@
       </div>
     </div>
   </div>
-  <main class="main-content  mt-0">
+  <main class="main-content mt-0">
     <section>
       <div class="page-header min-vh-75">
         <div class="container">
@@ -57,21 +57,21 @@
                   <p class="mb-0">Connecte toi pour découvrir l'avancé du front</p>
                 </div>
                 <div class="card-body">
-                  <form role="form">
+                  <form id="login-form" role="form">
                     <label style="color: white;">Email</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                      <input type="email" id="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
                     </div>
                     <label style="color: white;">Mot de passe</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                      <input type="password" id="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
                     </div>
                     <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
                       <label class="form-check-label" for="rememberMe" style="color: white;">Se souvenir de moi</label>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn bg-gradient-info w-100 mt-4 mb-0">Pour la liberté</button>
+                      <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Pour la liberté</button>
                     </div>
                   </form>
                 </div>
@@ -108,6 +108,39 @@
       </div>
     </div>
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loginForm = document.querySelector('#login-form');
+
+      loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const email = document.querySelector('#email').value;
+        const password = document.querySelector('#password').value;
+
+        try {
+          const response = await fetch('/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
+          });
+
+          if (!response.ok) {
+            throw new Error('Email ou mot de passe incorrect');
+          }
+
+          const data = await response.json();
+          localStorage.setItem('accessToken', data.accessToken); // Stocker le token JWT dans le localStorage
+          window.location.href = '/profile'; // Rediriger vers la page de profil sécurisée
+        } catch (error) {
+          console.error(error.message);
+          // Gérer les erreurs de connexion, par exemple afficher un message à l'utilisateur
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

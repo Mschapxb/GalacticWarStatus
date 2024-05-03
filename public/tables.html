@@ -12,8 +12,6 @@
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link href="assets/css/nucleo-svg.css" rel="stylesheet" />
   <link id="pagestyle" href="assets/css/main.css" rel="stylesheet" />
-  <script src="assets/js/table.js"></script>
-
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -164,9 +162,7 @@
           <div class="row align-items-center justify-content-lg-between">
             <div class="col-lg-6 mb-lg-0 mb-4">
               <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>,
+                © <script> document.write(new Date().getFullYear()) </script>,
                 Pour la démocratie
               </div>
             </div>
@@ -177,41 +173,13 @@
   </main>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Données fictives pour l'exemple
-      const data = [
-          { planet: "Cyberstan", system: "Système machin", status: "Libéré", liberation: "100%", players: 553535 },
-          { planet: "Planet 2", system: "Système truc", status: "Enemies", liberation: "0%", players: 3000 },
-          { planet: "Malevelon Creek", system: "Système machin", status: "Libéré", liberation: "100%", players: 0 },
-          { planet: "Malevelon Beach", system: "Système machin", status: "Libéré", liberation: "100%", players: 0 },
-          { planet: "FenrirII", system: "Système machin", status: "Enemies", liberation: "30%", players: 125541 },
-      ];
-  
-      // Appel de la fonction pour générer le tableau avec les données
-      generateTable(data);
-  
-      // Ajout d'un écouteur d'événements pour la case à cocher
-      const favoriteCheckbox = document.getElementById("favoriteCheckbox");
-      favoriteCheckbox.addEventListener("change", function() {
-          if (this.checked) {
-              // Si la case est cochée, afficher uniquement les favoris
-              generateTable(data, true);
-          } else {
-              // Sinon, afficher toutes les planètes
-              generateTable(data, false);
-          }
-      });
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
       var token = localStorage.getItem('accessToken');
       if (!token) {
-          // Si aucun token n'est trouvé, redirige l'utilisateur vers la page 'index.html'
           window.location.href = 'index.html';
-          return; // Arrête l'exécution du script restant pour éviter les erreurs
+          return;
       }
-  
-      const apiUrl = 'http://localhost:3000/api/helldivers/info';  // Assurez-vous que l'URL est correcte
+
+      const apiUrl = 'http://localhost:3000/api/helldivers/info'; // Assurez-vous que l'URL est correcte
   
       function fetchPlanetData() {
           fetch(apiUrl, {
@@ -236,7 +204,7 @@
   
       function generateTable(data, onlyFavorites = false) {
           const tableBody = document.querySelector('.table tbody');
-          tableBody.innerHTML = ''; // Effacer les données existantes
+          tableBody.innerHTML = '';
   
           data.forEach((item) => {
               if (onlyFavorites && !item.isFavorite) {
@@ -257,7 +225,6 @@
   
       fetchPlanetData();
   
-      // Ajout d'un écouteur d'événements pour la case à cocher
       const favoriteCheckbox = document.getElementById("favoriteCheckbox");
       favoriteCheckbox.addEventListener("change", function() {
           fetchPlanetData().then(data => {
@@ -267,5 +234,4 @@
   });
   </script>
 </body>
-
 </html>

@@ -122,7 +122,7 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a href="index.html" class="nav-link text-body font-weight-bold px-0">
+              <a id="loginLink" href="index.html" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">Connexion</span>
               </a>
@@ -174,10 +174,8 @@
               </div>
             </div>
             <div class="card-body p-3">
-              <ul class="list-group">
-                <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Pseudo</strong> &nbsp; Billy</li>
-                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; Billy@billy.com</li>
-                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mot de passe</strong> &nbsp; *****</li>
+              <ul class="list-group" id="userProfile">
+                <!-- Les informations de profil seront injectées ici -->
               </ul>
             </div>
           </div>
@@ -198,6 +196,49 @@
       </footer>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var token = localStorage.getItem('accessToken');
+      const loginLink = document.getElementById('loginLink');
+
+      if (!token) {
+        // Redirige vers la page d'index si aucun token JWT n'est trouvé
+        window.location.href = 'index.html';
+      } else {
+        // Modifie le texte et le lien pour la déconnexion si le token est trouvé
+        loginLink.innerHTML = '<i class="fa fa-user me-sm-1"></i><span class="d-sm-inline d-none">Déconnexion</span>';
+        loginLink.href = 'javascript:void(0);';
+        loginLink.addEventListener('click', function() {
+          localStorage.removeItem('accessToken'); // Supprime le token JWT
+          window.location.href = 'index.html'; // Redirige vers l'index après déconnexion
+        });
+
+        // Fetch pour récupérer les données de l'utilisateur
+        fetch('http://localhost:3000/api/users/profile', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Réponse du réseau non satisfaisante: ' + response.statusText);
+          }
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById('userProfile').innerHTML = `
+            <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Pseudo:</strong> ${data.username}</li>
+            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> ${data.email}</li>
+            <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">ID:</strong> ${data.id}</li>
+          `;
+        })
+        .catch(error => console.error('Erreur lors de la récupération des données: ', error));
+      }
+    });
+    </script>
 </body>
 
 </html>
