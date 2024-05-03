@@ -117,7 +117,6 @@
         </div>
       </div>
     </nav>
-    <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="row">
         <div class="col-12">
@@ -136,45 +135,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="assets/img/planet.png" class="avatar avatar-sm me-3" alt="user1">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Cyberstan</h6>
-                            <p class="text-xs text-secondary mb-0">Système machin</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Libéré</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">100%</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="assets/img/planet.png" class="avatar avatar-sm me-3" alt="user2">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Planet 2</h6>
-                            <p class="text-xs text-secondary mb-0">Système truc</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Enemies</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">0%</span>
-                      </td>
-                    <tr>
-                    </tr>
+                    <!-- Table Body Will Be Dynamically Generated -->
                   </tbody>
                 </table>
               </div>
@@ -191,11 +152,61 @@
                   document.write(new Date().getFullYear())
                 </script>,
                 Pour la démocratie
+              </div>
+            </div>
           </div>
         </div>
       </footer>
     </div>
   </main>
-</body>
 
+  <!-- Script for Dynamic Table Data -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Données fictives pour l'exemple
+      const data = [
+        { planet: "Cyberstan", system: "Système machin", status: "Libérée", liberation: "100%" },
+        { planet: "Planet 2", system: "Système truc", status: "Enemie", liberation: "0%" },
+        { planet: "Planet 2", system: "Système truc", status: "Enemie", liberation: "50%" },
+        { planet: "Planet 3", system: "Système truc", status: "Libérée", liberation: "100%" }
+      ];
+
+      // Sélectionne l'élément tbody du tableau
+      const tbody = document.querySelector("table tbody");
+
+      // Parcours les données et crée les lignes du tableau
+      data.forEach(item => {
+        const row = document.createElement("tr");
+
+        // Crée les cellules pour chaque propriété
+        const planetCell = document.createElement("td");
+        planetCell.innerHTML = `
+          <div class="d-flex px-2 py-1">
+            <div>
+              <img src="assets/img/planet.png" class="avatar avatar-sm me-3" alt="${item.planet}">
+            </div>
+            <div class="d-flex flex-column justify-content-center">
+              <h6 class="mb-0 text-sm">${item.planet}</h6>
+              <p class="text-xs text-secondary mb-0">${item.system}</p>
+            </div>
+          </div>
+        `;
+        row.appendChild(planetCell);
+
+        const statusCell = document.createElement("td");
+        statusCell.classList.add("align-middle", "text-center", "text-sm");
+        statusCell.innerHTML = `<span class="badge badge-sm bg-gradient-${item.status === "Libérée" ? "success" : "secondary"}">${item.status}</span>`;
+        row.appendChild(statusCell);
+
+        const liberationCell = document.createElement("td");
+        liberationCell.classList.add("align-middle", "text-center");
+        liberationCell.innerHTML = `<span class="text-secondary text-xs font-weight-bold">${item.liberation}</span>`;
+        row.appendChild(liberationCell);
+
+        // Ajoute la ligne au tableau
+        tbody.appendChild(row);
+      });
+    });
+  </script>
+</body>
 </html>
