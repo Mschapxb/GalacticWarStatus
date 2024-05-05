@@ -4,6 +4,7 @@ const app = express();
 const userRoutes = require('./routes/userRoutes');
 const helldiversRoutes = require('./routes/helldiversRoutes'); // Importez les routes Helldivers
 
+
 // Middleware pour analyser le JSON
 app.use(express.json());
 

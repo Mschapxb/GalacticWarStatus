@@ -1,10 +1,15 @@
 // table.js
 
 document.addEventListener("DOMContentLoaded", function() {
+    const favoriteCheckbox = document.getElementById('favoriteCheckbox');
     fetchPlanetData();
+
+    favoriteCheckbox.addEventListener('change', function() {
+        fetchPlanetData(this.checked);
+    });
 });
 
-async function fetchPlanetData() {
+async function fetchPlanetData(onlyFavorites = false) {
     const token = localStorage.getItem('accessToken');
     if (!token) {
         window.location.href = 'index.html';
@@ -23,7 +28,7 @@ async function fetchPlanetData() {
             throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        generateTable(data); // initial table generation
+        generateTable(data, onlyFavorites); // Modifier la génération de la table pour prendre en compte onlyFavorites
     } catch (error) {
         console.error('Error fetching data: ', error);
         alert('Failed to load planet data');
@@ -36,7 +41,7 @@ function generateTable(data, onlyFavorites = false) {
 
     data.forEach((item) => {
         if (onlyFavorites && !item.isFavorite) {
-            return;
+            return; // Ignorer les non-favoris si onlyFavorites est true
         }
 
         const row = `
@@ -49,7 +54,7 @@ function generateTable(data, onlyFavorites = false) {
                 <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.liberationPercentage.toFixed(2)}%</td>
                 <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">${item.playerCount}</td>
                 <td class="text-center">
-                    <span class="favorite-star ${item.isFavorite ? 'text-warning' : 'text-secondary'}" data-planet-id="${item.planetId}" style="cursor: pointer;">
+                    <span class="favorite-star ${item.isFavorite ? 'text-warning' : 'text-secondary'}" data-planet-name="${item.planetName}" style="cursor: pointer;">
                         <i class="fas fa-star"></i>
                     </span>
                 </td>
@@ -58,16 +63,46 @@ function generateTable(data, onlyFavorites = false) {
         tableBody.innerHTML += row;
     });
 
-    // Ajoutez un gestionnaire d'événements pour cliquer sur une étoile pour ajouter/supprimer une planète des favoris
-    document.querySelectorAll('.favorite-star').forEach((star) => {
-        star.addEventListener('click', function() {
-            const planetId = this.dataset.planetId;
-            toggleFavorite(planetId);
+    attachFavoriteHandlers();
+}
+
+function attachFavoriteHandlers() {
+    const stars = document.querySelectorAll('.favorite-star');
+    console.log(`Attaching handlers to ${stars.length} stars`);
+    stars.forEach((star) => {
+        star.addEventListener('click', async function() {
+            const planetName = this.dataset.planetName;
+            const isFavorite = this.classList.contains('text-warning');
+            console.log(`Toggling favorite for: ${planetName}`);
+            await toggleFavorite(planetName, isFavorite, this);
         });
     });
 }
 
-async function toggleFavorite(planetId) {
 
+async function toggleFavorite(planetName, isFavorite, element) {
+    const token = localStorage.getItem('accessToken');
+    const method = isFavorite ? 'DELETE' : 'POST';
+    const apiUrl = `http://localhost:3000/api/users/favorites/${encodeURIComponent(planetName)}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: method,
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to toggle favorite');
+        }
+        // Update UI based on the successful toggle
+        if (isFavorite) {
+            element.classList.replace('text-warning', 'text-secondary');
+        } else {
+            element.classList.replace('text-secondary', 'text-warning');
+        }
+    } catch (error) {
+        console.error('Error toggling favorite: ', error);
+    }
 }
-
