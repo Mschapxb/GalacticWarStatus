@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./api/
+        working-directory: ./src/
 
     strategy:
       matrix:
@@ -30,16 +30,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: ./api/package-lock.json
+        cache-dependency-path: ./package-lock.json
     - run: npm ci
     - run: npm run build --if-present
 
     - name: Nodejs Security Scan api
       uses: ajinabraham/njsscan-action@v7
       with:
-        args: --json --missing-controls -w ./api/
-    
-    - name: Nodejs Security Scan endpoints
-      uses: ajinabraham/njsscan-action@v7
-      with:
-        args: --json --missing-controls -w ./api/endpoints/
+        args: --json --missing-controls -w ./src/

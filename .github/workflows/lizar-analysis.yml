@@ -5,8 +5,8 @@ jobs:
   lizard-api:
     runs-on: ubuntu-latest
     env:
-      SCAN_PATH: "./api"
-      EXCLUDE_PATH: "\"./api/node_modules/*\"" 
+      SCAN_PATH: "./src"
+      EXCLUDE_PATH: "\"./node_modules/*\"" 
 
     steps:
       - uses: actions/checkout@v3
