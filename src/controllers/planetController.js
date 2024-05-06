@@ -1,4 +1,5 @@
 const https = require('https');
+const lruCache = require('lru-cache');
 
 const fetchPlanetData = (req, res) => {
     const options = {
@@ -7,7 +8,7 @@ const fetchPlanetData = (req, res) => {
         path: '/api/v1/campaigns',  // Chemin mis à jour si nécessaire
         method: 'GET',
         headers: {
-            'X-Super-Client': 'nom_de_votre_application'  // Remplacer par le nom de votre application
+            'X-Super-Client': 'galactic-war-status'  // Remplacer par le nom de votre application
         }
     };
 

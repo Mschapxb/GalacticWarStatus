@@ -5,11 +5,11 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
-// Ajoutez une route pour servir la page Profile.html
+// Ajoutez une route pour servir les pages publics
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/profile', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'Profile.html'));
+  res.sendFile(path.join(__dirname, 'public', 'profile.html'));
 });
 
 app.listen(PORT, () => {

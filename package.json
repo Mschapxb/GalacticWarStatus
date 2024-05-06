@@ -17,7 +17,7 @@
     "express": "^4.19.2",
     "google-auth-library": "^9.9.0",
     "jsonwebtoken": "^9.0.2",
-    "mysql": "^2.18.1",
+    "lru-cache": "^10.2.2",
     "mysql2": "^3.9.7",
     "node-fetch": "^3.3.2"
   },

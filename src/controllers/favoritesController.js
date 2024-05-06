@@ -2,19 +2,19 @@ const connection = require('../config/db');
 const jwt = require('jsonwebtoken');
 
 const addFavorite = async (req, res) => {
-    const userId = req.user.id;
-    const planetName = req.params.planetName;
-    try {
-      await connection.query(
-        'INSERT INTO favorites (user_id, planet_name) VALUES (?, ?) ON DUPLICATE KEY UPDATE user_id = VALUES(user_id), planet_name = VALUES(planet_name)',
-        [userId, planetName]
-      );
-      res.status(201).send({ message: 'Favori ajouté ou mis à jour.' });
-    } catch (error) {
-      console.error('Error adding favorite:', error);
-      res.status(500).send({ message: 'Erreur lors de l\'ajout du favori.' });
-    }
-  };
+  const userId = req.user.id;
+  const planetName = req.params.planetName;
+  try {
+    await connection.query(
+      'INSERT INTO favorites (user_id, planet_name) VALUES (?, ?) ON DUPLICATE KEY UPDATE user_id = VALUES(user_id), planet_name = VALUES(planet_name)',
+      [userId, planetName]
+    );
+    res.status(201).send({ message: 'Favori ajouté ou mis à jour.' });
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).send({ message: 'Erreur lors de l\'ajout du favori.' });
+  }
+};
   
 
 const removeFavorite = async (req, res) => {
