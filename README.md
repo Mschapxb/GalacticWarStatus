@@ -2,6 +2,10 @@
 
 [![NodeJS security scan](https://github.com/Mschapxb/GalacticWarStatus/actions/workflows/nodejs-security-scan.yml/badge.svg)](https://github.com/Mschapxb/GalacticWarStatus/actions/workflows/nodejs-security-scan.yml)
 
+**Note temporaire : Le projet n'est pas encore fini, l'équipe de dev a été retardée suite a des circonstances personnels et s'excuse du dérangement.**
+
+**Le projet seras complétés d'ici la fin du lundi 6 mai 2024**
+
 # Installation de jsdom et Jest pour les tests unitaires
 
 Ce projet utilise Jest pour l'exécution des tests unitaires et jsdom pour simuler un environnement de navigateur dans les tests. Suivez les instructions ci-dessous pour installer ces dépendances et exécuter les tests.
