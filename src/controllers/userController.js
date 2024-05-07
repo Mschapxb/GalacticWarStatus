@@ -11,6 +11,7 @@ exports.register = async (req, res) => {
             [username, email, hashedPassword],
             (error, results) => {
                 if (error) {
+                    console.error('Erreur lors de l\'inscription de l\'utilisateur:', error);
                     return res.status(500).json({ error: 'Erreur lors de l\'inscription de l\'utilisateur' });
                 }
                 res.status(201).send('Utilisateur créé');
@@ -35,7 +36,7 @@ exports.login = (req, res) => {
             }
 
             const user = { id: results[0].id, email: results[0].email };
-            const accessToken = jwt.sign(user, 'votre_clé_secrète', { expiresIn: '1h' });
+            const accessToken = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
 
             res.json({
                 accessToken
@@ -43,6 +44,7 @@ exports.login = (req, res) => {
         }
     );
 };
+
 exports.getProfile = (req, res) => {
     
     connection.query(

@@ -2,9 +2,7 @@
 
 [![NodeJS security scan](https://github.com/Mschapxb/GalacticWarStatus/actions/workflows/nodejs-security-scan.yml/badge.svg)](https://github.com/Mschapxb/GalacticWarStatus/actions/workflows/nodejs-security-scan.yml)
 
-**Note temporaire : Le projet n'est pas encore fini, l'équipe de dev a été retardée suite a des circonstances personnels et s'excuse du dérangement.**
-
-**Le projet seras complétés d'ici la fin du lundi 6 mai 2024**
+[![API Test](https://github.com/Mschapxb/GalacticWarStatus/actions/workflows/api-unit-test.yml/badge.svg)](https://github.com/Mschapxb/GalacticWarStatus/actions/workflows/api-unit-test.yml)
 
 # Installation de jsdom et Jest pour les tests unitaires
 

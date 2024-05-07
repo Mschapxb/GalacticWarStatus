@@ -1,7 +1,23 @@
 const https = require('https');
-const lruCache = require('lru-cache');
+const { LRUCache } = require('lru-cache');
+
+const cacheOptions = {
+    max: 10,
+    maxAge: 1000 * 30 // 30 seconds lifetime in cache
+    // rate limit is 5 request per 10 seconds so we take a bit of a security margin
+};
+
+const cache = new LRUCache(cacheOptions);
 
 const fetchPlanetData = (req, res) => {
+
+    const cachedData = cache.get('planetData');
+    if (cachedData) { // cache hit
+        res.json(cachedData);
+        return;
+    }
+
+    // in case of cache miss
     const options = {
         hostname: 'api.helldivers2.dev',
         port: 443,
@@ -27,6 +43,9 @@ const fetchPlanetData = (req, res) => {
                     health: item.planet.health,
                     liberationPercentage: calculateLiberation(item.planet.health, item.planet.maxHealth)
                 }));
+                
+                cache.set('planetData', result);
+
                 res.json(result);
             } catch (error) {
                 console.error('Error parsing JSON!', error);
@@ -43,7 +62,7 @@ const fetchPlanetData = (req, res) => {
     request.end();
 };
 
-const calculateLiberation = (currentHealth, maxHealth) => {
+function calculateLiberation(currentHealth, maxHealth) {
     return 100 - (currentHealth / maxHealth * 100);
 };
 
