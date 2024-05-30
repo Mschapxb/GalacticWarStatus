@@ -18,7 +18,7 @@
     "google-auth-library": "^9.9.0",
     "jsonwebtoken": "^9.0.2",
     "lru-cache": "^10.2.2",
-    "mysql2": "^3.9.7",
+    "mysql2": "^3.9.8",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
